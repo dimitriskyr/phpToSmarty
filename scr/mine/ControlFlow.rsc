@@ -81,14 +81,4 @@ public void controlFlow(){
 	text(labs);
 	text(sortedLabs);
 	text(listed);
-	
-	/*int max=0;
-	for (node <- mapNodes | Lab x){
-	
-		if( lab(number) := node[x]){
-			max=number;
-			if()
-			}
-	}*/
-	
 }
