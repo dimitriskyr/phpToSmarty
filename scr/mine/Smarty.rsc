@@ -62,78 +62,13 @@ public void showTemplate(){
 			appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assignment));
 			i+=1;
 		}
-		
-		
-		/*case echo(X) :{	
-			for (echoExpression <- X){
-				printedText=evaluateExpression(echoExpression,moles);
-			}
-		}
-		
-		case Expr::print(printExpression) : {
-			printedText=evaluateExpression(printExpression,moles);
-		}*/
 	};
 		
-	for (state <- scr.body){
-		if (\if(cond, body, elseIfs, elseClause) := state){
-		appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{if ");
-			evaluateExpression(cond,moles);
-			appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
-			echoOrPrint(body,moles);
-				
-			for(elseif <- elseIfs){
-				if (elseIf(cond2,body2):= elseif){
-					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{elseif ");
-					evaluateExpression(cond2,moles);
-					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
-					echoOrPrint(body2,moles);
-				}
-			}
-				
-			if ( someElse(\else(body3)) := elseClause){
-				appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{else} ");
-				echoOrPrint(body3,moles);
-			}			
-			appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/if}");
-		}
-		
-		if(echo(X) := state){	
-			for (echoExpression <- X){
-				printedText=evaluateExpression(echoExpression,moles);
-			}
-		}
-		
-		if (exprstmt(Expr::print(printExpression)) := state) {
-			printedText=evaluateExpression(printExpression,moles);
-		}
-		
-	}
+	// Here takes place the evaluation of the PHP program
 	
-	
+	formOfStmt(scr.body,moles);
+		
 	/*visit (scr){
-		
-		case \if(cond, body, elseIfs, elseClause) : {
-			appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{if ");
-			evaluateExpression(cond,moles);
-			appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
-			echoOrPrint(body,moles);
-				
-			for(elseif <- elseIfs){
-				if (elseIf(cond2,body2):= elseif){
-					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{elseif ");
-					evaluateExpression(cond2,moles);
-					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
-					echoOrPrint(body2,moles);
-				}
-			}
-				
-			if ( someElse(\else(body3)) := elseClause){
-				appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{else} ");
-				echoOrPrint(body3,moles);
-			}			
-			appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/if}");
-		}
 		
 		case function(name, byRef, params, body) : {
 			echoOrPrint(body,moles);
@@ -195,11 +130,35 @@ public void showTemplate(){
 	println("finished");	
 }
 
-private void echoOrPrint(list[Stmt] body, map[str,str] moles){
-	for (part<-body){
+private void formOfStmt(list[Stmt] body, map[str,str] moles){
+			for (part<-body){
 				switch(part) {
 				
+					case \if(cond, body1, elseIfs, elseClause) :{
+						print("hell");
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{if ");
+						evaluateExpression(cond,moles);
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
+						formOfStmt(body1,moles);
+				
+						for(elseif <- elseIfs){
+							if (elseIf(cond2,body2):= elseif){
+								appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{elseif ");
+									evaluateExpression(cond2,moles);
+									appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
+									formOfStmt(body2,moles);
+							}
+						}
+				
+						if ( someElse(\else(body3)) := elseClause){
+							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{else} ");
+							formOfStmt(body3,moles);
+						}			
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/if}");
+					}
+				
 					case echo(X) :{	
+						print("why???");
 						for (echoExpression <- X){
 							printedText=evaluateExpression(echoExpression,moles);
 						}
