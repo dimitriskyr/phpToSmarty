@@ -18,7 +18,7 @@ import List;
 public void showTemplate(){
 	int i=0;
 	str printedText="";
-	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/ifStatement.php|; 
+	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/assignments.php|; 
 	Script scr=loadPHPFile(l);
 	Expr display = propertyFetch(var(name(name("smarty"))),name(name("display(\'hello.tpl\');\n\r")));
 	Expr assignment;
@@ -38,13 +38,6 @@ public void showTemplate(){
 	list[str] holes= ["val1","val2","val3","val4","val5","val6","val7","val8","val9"];
 	map [int,str] mole = (0 : "val1" , 1 : "val2" , 2 : "val3" , 3 : "val4", 4 : "val5", 5 : "val6");
 	map [str,str] moles = ();
-	Graph[CFGNode] gr;
-	<lscr, cfgs> = buildCFGsAndScript(scr);
-	
-	for (np <- cfgs) {
-		gr = cfgAsGraph(cfgs[np]);
-		text(gr);
-	}
 	
 	writeFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{* Smarty *} \r\n");
 	writeFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, initialText);	
@@ -81,69 +74,8 @@ public void showTemplate(){
 			printedText=evaluateExpression(printExpression,moles);
 		}*/
 	};
-	
-	list[Stmt] stmts=[];
-	list[int] labs=[];
-	map [int,Stmt] mapNodes = ();
-	int j=0;
-	
-	for (nodes <- gr){
 		
-		/*if (<stmtNode(stmt1,lab(lstmt1)),stmtNode(stmt2,lstmt2)> := nodes){
-		//println("STATEMENT <stmt1>");
-		//println("STATEMENT <stmt2>");
-		//println(i); 
-		i+=1;
-		println("<i> stmtnode");
-		stmts=stmts+stmt1;
-		labs=labs+lstmt1;
-		mapNodes = mapNodes + (lstmt1 : stmt1);
-		}*/
-		
-		/*else if(<stmtNode(stmt1,lab(lstmt1)),_> := nodes){
-			//println("EXPRESSION <expr1>");
-			//println("EXPRESSION <expr2>");
-			//println(i);
-			i+=1;
-			println("<i> stmtnode");
-			stmts=stmts+stmt1;
-			labs=labs+lstmt1;
-			mapNodes= mapNodes + (lstmt1:stmt1);		
-		}*/
-		
-		if(<stmtNode(stmt1,lab(lstmt1)),scriptExit()> := nodes){
-			//println("EXPRESSION <expr1>");
-			//println("EXPRESSION <expr2>");
-			//println(i);
-			i+=1;
-			println("<i> stmtnode");
-			stmts=stmts+stmt1;
-			labs=labs+lstmt1;
-			mapNodes= mapNodes + (lstmt1:stmt1);		
-		}
-		
-		else if(<stmtNode(stmt1,lab(lstmt1)),exprNode(expr1,lexpr1)> := nodes){
-			//println("EXPRESSION <expr1>");
-			//println("EXPRESSION <expr2>");
-			//println(i);
-			i+=1;
-			println("<i> stmtnode");
-			stmts=stmts+stmt1;
-			labs=labs+lstmt1;
-			mapNodes= mapNodes + (lstmt1:stmt1);		
-		}
-	}
-	
-	text(labs);
-	
-	list[int] sortedLabs = sort (labs);	
-	list[Stmt] listed = [];
-	for (q <- [0..size(labs - 1)])
-		listed= listed + mapNodes[sortedLabs[q]];
-		
-	text(listed);
-		
-	for (state <- listed){
+	for (state <- scr.body){
 		if (\if(cond, body, elseIfs, elseClause) := state){
 		appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{if ");
 			evaluateExpression(cond,moles);
@@ -172,7 +104,7 @@ public void showTemplate(){
 			}
 		}
 		
-		if (Expr::print(printExpression) := state) {
+		if (exprstmt(Expr::print(printExpression)) := state) {
 			printedText=evaluateExpression(printExpression,moles);
 		}
 		
