@@ -18,7 +18,7 @@ import List;
 public void showTemplate(){
 	int i=0;
 	str printedText="";
-	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/assignments.php|; 
+	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/functionCall.php|; 
 	Script scr=loadPHPFile(l);
 	Expr display = propertyFetch(var(name(name("smarty"))),name(name("display(\'hello.tpl\');\n\r")));
 	Expr assignment;
@@ -70,35 +70,6 @@ public void showTemplate(){
 		
 	/*visit (scr){
 		
-		case function(name, byRef, params, body) : {
-			echoOrPrint(body,moles);
-			for (partt <- body){
-				switch (partt){
-					case \if(cond, body, elseIfs, elseClause) : {
-						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{if ");
-						evaluateExpression(cond,moles);
-						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
-						echoOrPrint(body,moles);
-							
-						for(elseif <- elseIfs){
-							if (elseIf(cond2,body2):= elseif){
-								appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{elseif ");
-								evaluateExpression(cond2,moles);
-								appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
-								echoOrPrint(body2,moles);
-							}
-						}
-							
-						if ( someElse(\else(body3)) := elseClause){
-							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{else} ");
-							echoOrPrint(body3,moles);
-						}			
-						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/if}");
-					}
-				}
-			}
-		}
-		
 		case foreach(arrayExpr, keyvar, byRef, asVar, body) : {
 								
 			if (pp(arrayExpr) in moles && noExpr() := keyvar && var(name(name(variable))) := asVar){
@@ -133,7 +104,19 @@ public void showTemplate(){
 private void formOfStmt(list[Stmt] body, map[str,str] moles){
 			for (part<-body){
 				switch(part) {
-				
+					
+					case exprstmt(call(funName, parameters)) :{
+						for (aPart<-body){
+							switch (aPart){
+								case function(name, byRef, params, body1) : {
+									if( name == pp(funName)){
+										formOfStmt(body1,moles);
+									}
+								}
+							}
+						}
+					}
+									
 					case \if(cond, body1, elseIfs, elseClause) :{
 						print("hell");
 						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{if ");
