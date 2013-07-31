@@ -16,18 +16,12 @@ public void binaryLeft(Expr left,Expr right,Op op,map[str,str] moles){
 			}
 			
 			case scalar(integer(number)) : {
-				if (concat() := op)
-					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " <number> ");
-				else
-					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " <number> ");
+					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "<number> ");
 			}
 			
 			case var(name(name(metavliti))) : {
 				if (pp(var(name(name(metavliti)))) in moles){
-					if (concat() := op)
-						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var(name(name(metavliti))))]>} ");
-					else
-						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var(name(name(metavliti))))]>} ");		
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{$<moles[pp(var(name(name(metavliti))))]>} ");		
 				}
 			}
 			
@@ -42,7 +36,7 @@ public void binaryLeft(Expr left,Expr right,Op op,map[str,str] moles){
 			case assign(assignTo,assignExpr) :{
 				if (var(name(name(metavliti))) := assignTo){
 					if (pp(var(name(name(metavliti)))) in moles)
-						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " $<moles[pp(var(name(name(metavliti))))]> = <pp(assignExpr)> ");
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "$<moles[pp(var(name(name(metavliti))))]> = <pp(assignExpr)> ");
 				}
 			}
 			
@@ -52,7 +46,7 @@ public void binaryLeft(Expr left,Expr right,Op op,map[str,str] moles){
 			}
 			
 			default : {
-				println ("paparitses");
+				println ("nothing");
 			}		
 		}
-	}
+}

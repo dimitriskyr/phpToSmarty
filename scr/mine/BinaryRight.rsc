@@ -20,17 +20,11 @@ public void binaryRight (Expr leftExpr,Expr rightExpr,Op oper,map[str,str] moles
 			}
 			
 			case scalar(integer(number)) : {
-				if (concat() := oper)
-					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " <number> ");
-				else
 					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " <number> ");
 			}
 			
 			case var(name(name(metavliti))) : {
 				if (pp(var(name(name(metavliti)))) in moles){
-					if (concat() := oper)
-						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var(name(name(metavliti))))]>} ");
-					else
 						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var(name(name(metavliti))))]>} ");		
 				}
 			}

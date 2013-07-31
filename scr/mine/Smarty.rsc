@@ -18,7 +18,7 @@ import List;
 public void showTemplate(){
 	int i=0;
 	str printedText="";
-	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/functionCall.php|; 
+	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/assignments.php|; 
 	Script scr=loadPHPFile(l);
 	Expr display = propertyFetch(var(name(name("smarty"))),name(name("display(\'hello.tpl\');\n\r")));
 	Expr assignment;
@@ -37,6 +37,7 @@ public void showTemplate(){
 	
 	list[str] holes= ["val1","val2","val3","val4","val5","val6","val7","val8","val9"];
 	map [int,str] mole = (0 : "val1" , 1 : "val2" , 2 : "val3" , 3 : "val4", 4 : "val5", 5 : "val6");
+	map [int,str] dynamicMole = (0 : "val1|escape:\'htmlall\'" , 1 : "val2|escape:\'htmlall\'", 2 : "val3|escape:\'htmlall\'", 3 : "val4|escape:\'htmlall\'");
 	map [str,str] moles = ();
 	
 	writeFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{* Smarty *} \r\n");
@@ -44,13 +45,23 @@ public void showTemplate(){
 	
 	visit (scr){
 		
-		case assign(X,Y) : {	
-			appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";\n\r");
-			moles[pp(X)]=mole[i];
-			assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(X)>);\n\r")));
-			//println(pp(assignment));
-			appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assignment));
-			i+=1;
+		case assign(X,Y) : {
+			if (fetchArrayDim(var(name(name("_GET"))),_) := Y){
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";\n\r");
+				moles[pp(X)]=dynamicMole[i];
+				assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(X)>);\n\r")));
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assignment));
+				i+=1;
+			}
+			else{	
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";\n\r");
+				moles[pp(X)]=mole[i];
+				assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(X)>);\n\r")));
+				//println(pp(assignment));
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assignment));
+				i+=1;
+			}
+			println(moles);
 		}
 		
 		case refAssign(X,Y) : {	
@@ -141,7 +152,6 @@ private void formOfStmt(list[Stmt] body, map[str,str] moles){
 					}
 				
 					case echo(X) :{	
-						print("why???");
 						for (echoExpression <- X){
 							printedText=evaluateExpression(echoExpression,moles);
 						}
