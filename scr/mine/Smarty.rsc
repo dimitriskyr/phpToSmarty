@@ -18,7 +18,7 @@ import List;
 public void showTemplate(){
 	int i=0;
 	str printedText="";
-	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/assignments.php|; 
+	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/arrays.php|; 
 	Script scr=loadPHPFile(l);
 	Expr display = propertyFetch(var(name(name("smarty"))),name(name("display(\'hello.tpl\');\n\r")));
 	Expr assignment;
@@ -37,7 +37,8 @@ public void showTemplate(){
 	
 	list[str] holes= ["val1","val2","val3","val4","val5","val6","val7","val8","val9"];
 	map [int,str] mole = (0 : "val1" , 1 : "val2" , 2 : "val3" , 3 : "val4", 4 : "val5", 5 : "val6");
-	map [int,str] dynamicMole = (0 : "val1|escape:\'htmlall\'" , 1 : "val2|escape:\'htmlall\'", 2 : "val3|escape:\'htmlall\'", 3 : "val4|escape:\'htmlall\'");
+	map [int,str] dynamicMole = (0 : "val1|escape:\'htmlall\'" , 1 : "val2|escape:\'htmlall\'", 2 : "val3|escape:\'htmlall\'",
+	 3 : "val4|escape:\'htmlall\'" , 4 : "val5|escape:\'htmlall\'");
 	map [str,str] moles = ();
 	
 	writeFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{* Smarty *} \r\n");
@@ -57,44 +58,35 @@ public void showTemplate(){
 				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";\n\r");
 				moles[pp(X)]=mole[i];
 				assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(X)>);\n\r")));
-				//println(pp(assignment));
 				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assignment));
 				i+=1;
 			}
-			println(moles);
+			print(moles);
 		}
 		
-		case refAssign(X,Y) : {	
-			appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";\n\r");
-			moles[pp(X)]=mole[i];
-			//println(pp(X));
-			assignment = propertyFetch(var(name(name("smarty"))),name(name("assignByRef(\'<holes[i]>\',<pp(X)>);\n\r")));
-			//println(pp(assignment));
-			appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assignment));
-			i+=1;
+		case refAssign(X,Y) : {
+			if (fetchArrayDim(var(name(name("_GET"))),_) := Y){
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";\n\r");
+				moles[pp(X)]=dynamicMole[i];
+				assignment = propertyFetch(var(name(name("smarty"))),name(name("assignByRef(\'<holes[i]>\',<pp(X)>);\n\r")));
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assignment));
+				i+=1;
+				}
+			else{		
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";\n\r");
+				moles[pp(X)]=mole[i];
+				assignment = propertyFetch(var(name(name("smarty"))),name(name("assignByRef(\'<holes[i]>\',<pp(X)>);\n\r")));
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assignment));
+				i+=1;
+			}
 		}
 	};
 		
 	// Here takes place the evaluation of the PHP program
 	
-	formOfStmt(scr.body,moles);
+	formOfStmt(scr.body,mole,moles,holes,i);
 		
 	/*visit (scr){
-		
-		case foreach(arrayExpr, keyvar, byRef, asVar, body) : {
-								
-			if (pp(arrayExpr) in moles && noExpr() := keyvar && var(name(name(variable))) := asVar){
-				appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, 
-				"{foreach from=$<moles[pp(arrayExpr)]> item=<variable>} 
-				\<li\>{<pp(asVar)>}\</li\> {/foreach}");
-			}
-				
-			if (pp(arrayExpr) in moles && someExpr(var(name(name(key)))) := keyvar && var(name(name(variable))) := asVar){
-				appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, 
-				"{foreach from=$<moles[pp(arrayExpr)]> key=<key> item=<variable>} 
-				\<li\>{$<key>}: {<pp(asVar)>}\</li\> {/foreach}");
-			}
-		}
 		
 		case \while(cond,body) : {
 			
@@ -104,7 +96,7 @@ public void showTemplate(){
 			echoOrPrint(body,moles);
 			appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/while}");
 		}
-	};*/
+	};*/ 
 	
 	appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(display)); 
 	appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "\r\n?\>");
@@ -112,9 +104,35 @@ public void showTemplate(){
 	println("finished");	
 }
 
-private void formOfStmt(list[Stmt] body, map[str,str] moles){
+private void formOfStmt(list[Stmt] body, map[int,str] mole, map[str,str] moles, list[str] holes,int i) {
 			for (part<-body){
 				switch(part) {
+				
+					case foreach(arrayExpr, keyvar, byRef, asVar, body1) : {
+								
+						if (pp(arrayExpr) in moles && noExpr() := keyvar && var(name(name(variable))) := asVar){
+							moles[pp(asVar)]=mole[i];
+							i+=1;
+							assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(asVar)>);\n\r")));
+							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, 
+							"{foreach from=$<moles[pp(arrayExpr)]> item=<moles[pp(asVar)]>}");
+							formOfStmt(body1,mole,moles,holes,i);
+							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/foreach}");
+						}
+				
+						elseif (pp(arrayExpr) in moles && someExpr(var(name(name(key)))) := keyvar && var(name(name(variable))) := asVar){
+							moles[pp(asVar)]=mole[i];
+							assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(asVar)>);\n\r")));
+							i+=1;
+							moles[pp(keyvar)]=mole[i];
+							i+=1;
+							assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(keyvar)>);\n\r")));
+							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, 
+							"{foreach from=$<moles[pp(arrayExpr)]> key=<moles[pp(keyvar)]> item=<moles[pp(asVar)]>}"); 
+							formOfStmt(body1,mole,moles,holes,i);
+							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/foreach}");
+						}
+					}
 					
 					case exprstmt(call(funName, parameters)) :{
 						for (aPart<-body){
