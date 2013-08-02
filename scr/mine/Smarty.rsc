@@ -139,7 +139,7 @@ private void formOfStmt(list[Stmt] body, map[int,str] mole, map[str,str] moles, 
 							switch (aPart){
 								case function(name, byRef, params, body1) : {
 									if( name == pp(funName)){
-										formOfStmt(body1,moles);
+										formOfStmt(body1,mole,moles,holes,i);
 									}
 								}
 							}
@@ -151,20 +151,20 @@ private void formOfStmt(list[Stmt] body, map[int,str] mole, map[str,str] moles, 
 						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{if ");
 						evaluateExpression(cond,moles);
 						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
-						formOfStmt(body1,moles);
+						formOfStmt(body1,mole,moles,holes,i);
 				
 						for(elseif <- elseIfs){
 							if (elseIf(cond2,body2):= elseif){
 								appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{elseif ");
 									evaluateExpression(cond2,moles);
 									appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
-									formOfStmt(body2,moles);
+									formOfStmt(body2,mole,moles,holes,i);
 							}
 						}
 				
 						if ( someElse(\else(body3)) := elseClause){
 							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{else} ");
-							formOfStmt(body3,moles);
+							formOfStmt(body3,mole,moles,holes,i);
 						}			
 						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/if}");
 					}
