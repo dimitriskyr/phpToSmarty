@@ -1,6 +1,7 @@
 module mine::Smarty
 
 import mine::EvaluateExpressions;
+import mine::EvaluateNonLiteral2;
 import lang::php::util::Utils;
 import lang::php::ast::AbstractSyntax;
 import util::ValueUI;
@@ -11,7 +12,7 @@ import lang::php::analysis::cfg::CFG;
 import lang::php::analysis::cfg::Label;
 import lang::php::analysis::cfg::FlowEdge;
 import lang::php::analysis::cfg::BuildCFG;
-import IO;
+import IO; 
 import Map;
 import List;
 
@@ -36,7 +37,7 @@ public void showTemplate(){
 	\n\r"; 
 	
 	list[str] holes= ["val1","val2","val3","val4","val5","val6","val7","val8","val9"];
-	map [int,str] mole = (0 : "val1" , 1 : "val2" , 2 : "val3" , 3 : "val4", 4 : "val5", 5 : "val6");
+	map [int,str] mole = (0 : "val1" , 1 : "val2" , 2 : "val3" , 3 : "val4", 4 : "val5", 5 : "val6", 6 : "val7");
 	map [int,str] dynamicMole = (0 : "val1|escape:\'htmlall\'" , 1 : "val2|escape:\'htmlall\'", 2 : "val3|escape:\'htmlall\'",
 	 3 : "val4|escape:\'htmlall\'" , 4 : "val5|escape:\'htmlall\'");
 	map [str,str] moles = ();
@@ -85,18 +86,8 @@ public void showTemplate(){
 	// Here takes place the evaluation of the PHP program
 	
 	formOfStmt(scr.body,mole,moles,holes,i);
-		
-	/*visit (scr){
-		
-		case \while(cond,body) : {
-			
-			appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{while ");
-			evaluateExpression(cond,moles);
-			appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "}");
-			echoOrPrint(body,moles);
-			appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/while}");
-		}
-	};*/ 
+	
+	// Here we put the display template command in our new PHP program
 	
 	appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(display)); 
 	appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "\r\n?\>");
@@ -106,8 +97,27 @@ public void showTemplate(){
 
 private void formOfStmt(list[Stmt] body, map[int,str] mole, map[str,str] moles, list[str] holes,int i) {
 			for (part<-body){
-				switch(part) {
+				switch(part) {					
 				
+					case \while(cond,body1) : {
+			
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{while ");
+						evaluateNonLiteral2(cond,moles);
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "}");
+						for (aPart <- body1){
+							if(exprstmt(unaryOperation(operand,operation)) := aPart){
+								if(pp(operand) in moles && postInc() := operation ){
+									str temp = moles[pp(operand)];
+									moles[pp(operand)]="<moles[pp(operand)]>++";
+									formOfStmt(body1,mole,moles,holes,i);
+									moles[pp(operand)]=temp;
+									println(moles);
+								}
+							}
+						}
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/while}");
+					}
+								
 					case foreach(arrayExpr, keyvar, byRef, asVar, body1) : {
 								
 						if (pp(arrayExpr) in moles && noExpr() := keyvar && var(name(name(variable))) := asVar){
@@ -180,4 +190,4 @@ private void formOfStmt(list[Stmt] body, map[int,str] mole, map[str,str] moles, 
 					}			
 				}
 			}
-}
+}					
