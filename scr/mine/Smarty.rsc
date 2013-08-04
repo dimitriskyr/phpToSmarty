@@ -106,12 +106,19 @@ private void formOfStmt(list[Stmt] body, map[int,str] mole, map[str,str] moles, 
 						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "}");
 						for (aPart <- body1){
 							if(exprstmt(unaryOperation(operand,operation)) := aPart){
-								if(pp(operand) in moles && postInc() := operation ){
+								if(pp(operand) in moles && postInc() := operation){
 									str temp = moles[pp(operand)];
 									moles[pp(operand)]="<moles[pp(operand)]>++";
 									formOfStmt(body1,mole,moles,holes,i);
 									moles[pp(operand)]=temp;
 									println(moles);
+								}
+								elseif(pp(operand) in moles && postDec() := operation){
+									str temp = moles[pp(operand)];
+									moles[pp(operand)]="<moles[pp(operand)]>--";
+									formOfStmt(body1,mole,moles,holes,i);
+									moles[pp(operand)]=temp;
+									println(moles);	
 								}
 							}
 						}

@@ -7,12 +7,36 @@ import lang::php::pp::PrettyPrinter;
 
 public void unaryCase(Expr operand, Op operation,map[str,str] moles){
 	switch (operand) {
+		
 		case scalar(string(oper)) :{
 					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "<pp(operation)><oper> ");
 		}
+		
 		case var(name(name(metavliti))) :{
 					if (pp(var(name(name(metavliti)))) in moles)
 						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " <pp(operation)>$<moles[pp(var(name(name(metavliti))))]> ");
+		}
+		
+		case fetchArrayDim(var,dim) : {
+					if (pp(var) in moles && someExpr(scalar(string(dimension))) := dim)
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var)]>.<dimension>} ");			
+					elseif (pp(var) in moles && someExpr(scalar(integer(dimension))) := dim)
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var)]>.<dimension>} ");
+		}
+		
+		case fetchArrayDim(var,dim) : {
+		if (pp(var) in moles && someExpr(scalar(string(dimension))) := dim){
+			if(operation == postDec() || operation == postInc())
+				appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var)]>.<dimension>}<pp(operation)> ");
+			else
+				appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " <pp(operation)>{$<moles[pp(var)]>.<dimension>} ");	
+		}		
+		elseif (pp(var) in moles && someExpr(scalar(integer(dimension))) := dim){
+			if(operation == postDec() || operation == postInc())
+				appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var)]>.<dimension>}<pp(operation)> ");
+			else
+				appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " <pp(operation)>{$<moles[pp(var)]>.<dimension>} ");
+			}
 		}
 	}		
 }

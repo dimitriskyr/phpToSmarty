@@ -10,8 +10,6 @@ import mine::BinaryRight;
 import mine::UnaryCase;
 
 	public void evaluateNonLiteral(Expr combinedExpr,map[str,str] moles){
-	println("it is not echo or print literal");
-	println(combinedExpr);
 	
 	switch (combinedExpr) {
 	

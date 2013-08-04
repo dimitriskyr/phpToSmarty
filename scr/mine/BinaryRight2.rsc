@@ -23,6 +23,13 @@ public void binaryRight2 (Expr leftExpr,Expr rightExpr,Op oper,map[str,str] mole
 					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " <number> ");
 			}
 			
+			case fetchArrayDim(var,dim) : {
+					if (pp(var) in moles && someExpr(scalar(string(dimension))) := dim)
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var)]>.<dimension>} ");			
+					elseif (pp(var) in moles && someExpr(scalar(integer(dimension))) := dim)
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var)]>.<dimension>} ");
+			}
+			
 			case var(name(name(metavliti))) : {
 				if (pp(var(name(name(metavliti)))) in moles){
 						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " $<moles[pp(var(name(name(metavliti))))]> ");		
