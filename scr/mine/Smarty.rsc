@@ -19,8 +19,8 @@ import List;
 public void showTemplate(){
 	int i=0;
 	str printedText="";
-	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/functionCall.php|; 
-	Script scr=loadPHPFile(l);
+	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/arrays.php|;  
+	Script scr=loadPHPFile(l); 
 	Expr display = propertyFetch(var(name(name("smarty"))),name(name("display(\'hello.tpl\');\n\r")));
 	Expr assignment;
 	str initialText = "\<?php \r\ndefine(\'SMARTY_DIR\', \'C:/Smarty/libs/Smarty-3.1.13/libs/\');
@@ -34,185 +34,247 @@ public void showTemplate(){
 	$smarty-\>config_dir   = \'C:/xampp/htdocs/smarty/configs/\';
 	$smarty-\>cache_dir    = \'C:/xampp/htdocs/smarty/cache/\';
 
-	\n\r"; 
+\n\n"; 
 	
-	list[str] holes= ["val1","val2","val3","val4","val5","val6","val7","val8","val9"];
-	map [int,str] mole = (0 : "val1" , 1 : "val2" , 2 : "val3" , 3 : "val4", 4 : "val5", 5 : "val6", 6 : "val7");
-	map [int,str] dynamicMole = (0 : "val1|escape:\'htmlall\'" , 1 : "val2|escape:\'htmlall\'", 2 : "val3|escape:\'htmlall\'",
-	 3 : "val4|escape:\'htmlall\'" , 4 : "val5|escape:\'htmlall\'");
+	list[str] holes= [];
+	map [int,str] mole = ();
+	map [int,str] dynamicMole = ();
 	map [str,str] moles = ();
 	
 	writeFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{* Smarty *} \r\n");
 	writeFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, initialText);	
 	
-	visit (scr){
+	/*visit (scr){
 		
 		case assign(X,Y) : {
+			println(moles);
 			if (fetchArrayDim(var(name(name("_GET"))),_) := Y){
-				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";\n\r");
-				moles[pp(X)]=dynamicMole[i];
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";");
+				dynamicMole[i+1]= "val<i+1>|escape:\'htmlall\'";
+				moles[pp(X)]=dynamicMole[i+1];
+				holes=holes+"val<i+1>";
 				assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(X)>);\n\r")));
-				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assignment));
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "<pp(assignment)>\n");
 				i+=1;
 			} 
-			else{	
-				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";\n\r");
-				moles[pp(X)]=mole[i];
+			else{				
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";");
+				mole[i+1]= "val<i+1>";
+				moles[pp(X)]=mole[i+1];
+				holes=holes+"val<i+1>";
 				assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(X)>);\n\r")));
-				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assignment));
-				i+=1;
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "<pp(assignment)>\n");
+				i+=1;			
 			}
-			print(moles);
 		}
 		
 		case refAssign(X,Y) : {
 			if (fetchArrayDim(var(name(name("_GET"))),_) := Y){
-				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";\n\r");
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";");
+				dynamicMole[i+1]= "val<i+1>|escape:\'htmlall\'";
 				moles[pp(X)]=dynamicMole[i];
+				holes=holes+"val<i+1>";
 				assignment = propertyFetch(var(name(name("smarty"))),name(name("assignByRef(\'<holes[i]>\',<pp(X)>);\n\r")));
-				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assignment));
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "<pp(assignment)>\n");
 				i+=1;
 				}
 			else{		
-				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";\n\r");
-				moles[pp(X)]=mole[i];
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";");
+				mole[i+1]= "val<i+1>";
+				moles[pp(X)]=mole[i+1];
+				holes=holes+"val<i+1>";
 				assignment = propertyFetch(var(name(name("smarty"))),name(name("assignByRef(\'<holes[i]>\',<pp(X)>);\n\r")));
-				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assignment));
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "<pp(assignment)>\n");
 				i+=1;
 			}
 		}
-	};
+	};*/
 		
 	// Here takes place the evaluation of the PHP program
-	
-	formOfStmt(scr.body,mole,moles,holes,i);
+	formOfStmt(scr.body,mole,moles,holes,i,dynamicMole);
 	
 	// Here we put the display template command in our new PHP program
 	
 	appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(display)); 
-	appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "\r\n?\>");
-	tree(scr);
+	appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "\n?\>");
+	text(scr);
 	println("finished");	
 }
 
-private void formOfStmt(list[Stmt] body, map[int,str] mole, map[str,str] moles, list[str] holes,int i) {
-			bool printOrEcho=false;
-			for (part<-body){
-				switch(part) {					
-				
-					case \while(cond,body1) : {
-						map[str,str] tempMoles=moles;
-						for (part1<-body1){
-							printOrEcho=isPrintOrEcho(part1);
-						}
-						if(printOrEcho){
-							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{while ");
-							evaluateNonLiteral2(cond,moles);
-							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "}");
-							for (aPart <- body1){
-								if(exprstmt(unaryOperation(operand,operation)) := aPart){
-									if(pp(operand) in moles && postInc() := operation){
-										tempMoles[pp(operand)]="<moles[pp(operand)]>++";
-										println(moles);
-										println(tempMoles);
-									}
-									elseif(pp(operand) in moles && postDec() := operation){
-										tempMoles[pp(operand)]="<moles[pp(operand)]>--";
-										println(moles);	
-										println(tempMoles);
-									}
-								}
-							}
-							formOfStmt(body1,mole,tempMoles,holes,i);
-							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/while}");
-						}			
-				   }
-								
-					case foreach(arrayExpr, keyvar, byRef, asVar, body1) : {
-						for (part1<-body1){								
-								printOrEcho=isPrintOrEcho(part1);		
-						}
-						if(printOrEcho==true){		
-							if (pp(arrayExpr) in moles && noExpr() := keyvar && var(name(name(variable))) := asVar){
-								moles[pp(asVar)]=mole[i];
-								i+=1;
-								assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(asVar)>);\n\r")));
-								appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, 
-								"{foreach from=$<moles[pp(arrayExpr)]> item=<moles[pp(asVar)]>}");
-								formOfStmt(body1,mole,moles,holes,i);
-								appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/foreach}");
-							}
-					
-							elseif (pp(arrayExpr) in moles && someExpr(var(name(name(key)))) := keyvar && var(name(name(variable))) := asVar){
-								moles[pp(asVar)]=mole[i];
-								assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(asVar)>);\n\r")));
-								i+=1;
-								moles[pp(keyvar)]=mole[i];
-								i+=1;
-								assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(keyvar)>);\n\r")));
-								appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, 
-								"{foreach from=$<moles[pp(arrayExpr)]> key=<moles[pp(keyvar)]> item=<moles[pp(asVar)]>}"); 
-								formOfStmt(body1,mole,moles,holes,i);
-								appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/foreach}");
-							}
-						}
-					}
-					
-					case exprstmt(call(funName, parameters)) :{
-						for (aPart<-body){
-							switch (aPart){
-								case function(name, byRef, params, body1) : {
-									if( name == pp(funName)){
-										for (part1<-body1){								
-											printOrEcho=isPrintOrEcho(part1);		
-										}
-										if(printOrEcho==true){
-											formOfStmt(body1,mole,moles,holes,i);
-										}
-									}
-								}
-							}
-						}
-					}
-									
-					case \if(cond, body1, elseIfs, elseClause) :{
-						for (part1<-body1){
-							printOrEcho=isPrintOrEcho(part1);
-						}
-						if(printOrEcho){
-							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{if ");
-							evaluateExpression(cond,moles);
-							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
-							formOfStmt(body1,mole,moles,holes,i);
-					
-							for(elseif <- elseIfs){
-								if (elseIf(cond2,body2):= elseif){
-									appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{elseif ");
-										evaluateExpression(cond2,moles);
-										appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
-										formOfStmt(body2,mole,moles,holes,i);
-								}
-							}
-					
-							if ( someElse(\else(body3)) := elseClause){
-								appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{else} ");
-								formOfStmt(body3,mole,moles,holes,i);
-							}			
-							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/if}");
-						}
-					}
-				
-					case echo(X) :{	
-						for (echoExpression <- X){
-							printedText=evaluateExpression(echoExpression,moles);
-						}
-					}
+private void formOfStmt(list[Stmt] body, map[int,str] mole, map[str,str] moles, list[str] holes,int i,map[int,str] dynamicMole) {
+	bool printOrEcho=false;
+	for (part<-body){
+		switch(part) {					
+			
+			case exprstmt(assign(X,Y)) : {
+			println(moles);
+			if (fetchArrayDim(var(name(name("_GET"))),_) := Y){
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";");
+				dynamicMole[i+1]= "val<i+1>|escape:\'htmlall\'";
+				moles[pp(X)]=dynamicMole[i+1];
+				holes=holes+"val<i+1>";
+				assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(X)>);\n\r")));
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "<pp(assignment)>\n");
+				i+=1;
+			} 
+			else{				
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";");
+				mole[i+1]= "val<i+1>";
+				moles[pp(X)]=mole[i+1];
+				holes=holes+"val<i+1>";
+				assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(X)>);\n\r")));
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "<pp(assignment)>\n");
+				i+=1;			
+			}
+		}
 		
-					case exprstmt(Expr::print(printExpression)) : {
-						printedText=evaluateExpression(printExpression,moles);						
-					}			
+		case exprstmt(refAssign(X,Y)) : {
+			if (fetchArrayDim(var(name(name("_GET"))),_) := Y){
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";");
+				dynamicMole[i+1]= "val<i+1>|escape:\'htmlall\'";
+				moles[pp(X)]=dynamicMole[i];
+				holes=holes+"val<i+1>";
+				assignment = propertyFetch(var(name(name("smarty"))),name(name("assignByRef(\'<holes[i]>\',<pp(X)>);\n\r")));
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "<pp(assignment)>\n");
+				i+=1;
+				}
+			else{		
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, pp(assign(X,Y)) + ";");
+				mole[i+1]= "val<i+1>";
+				moles[pp(X)]=mole[i+1];
+				holes=holes+"val<i+1>";
+				assignment = propertyFetch(var(name(name("smarty"))),name(name("assignByRef(\'<holes[i]>\',<pp(X)>);\n\r")));
+				appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "<pp(assignment)>\n");
+				i+=1;
+			}
+		}
+				
+			case \while(cond,body1) : {
+				map[str,str] tempMoles=moles;
+				for (part1<-body1){
+					printOrEcho=isPrintOrEcho(part1);
+				}
+				if(printOrEcho){
+					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{while ");
+					evaluateNonLiteral2(cond,moles);
+					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "}");
+					for (aPart <- body1){
+						if(exprstmt(unaryOperation(operand,operation)) := aPart){
+							if(pp(operand) in moles && postInc() := operation){
+								tempMoles[pp(operand)]="<moles[pp(operand)]>++";
+							}
+							elseif(pp(operand) in moles && postDec() := operation){
+								tempMoles[pp(operand)]="<moles[pp(operand)]>--";
+							}
+							else {
+							  // bail out!
+							  ;
+							}
+						}
+					}
+					formOfStmt(body1,mole,tempMoles,holes,i,dynamicMole);
+					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/while}");
+			   }			
+		    }
+								
+			case foreach(arrayExpr, keyvar, byRef, asVar, body1) : {
+				for (part1<-body1){								
+					printOrEcho=isPrintOrEcho(part1);		
+				}
+				if(printOrEcho==true){		
+					if (pp(arrayExpr) in moles && noExpr() := keyvar && var(name(name(variable))) := asVar){
+						mole[i+1]= "val<i+1>";
+						moles[pp(asVar)]=mole[i+1];
+						println(moles);
+						holes=holes+"val<i+1>";
+						assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(asVar)>);\n\r")));
+						//appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "<pp(assignment)>\n");
+						i+=1;
+						println(i);
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, 
+						"{foreach from=$<moles[pp(arrayExpr)]> item=<moles[pp(asVar)]>}");
+						formOfStmt(body1,mole,moles,holes,i,dynamicMole);
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/foreach}");
+					}
+					
+					elseif (pp(arrayExpr) in moles && someExpr(var(name(name(key)))) := keyvar && var(name(name(variable))) := asVar){
+						mole[i+1]= "val<i+1>";
+						moles[pp(asVar)]=mole[i+1];
+						holes=holes+"val<i+1>";
+						assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(asVar)>);\n\r")));
+						//appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "<pp(assignment)>\n");
+						i+=1;
+						println(i);
+						mole[i+1]= "val<i+1>";
+						moles[pp(keyvar)]=mole[i+1];
+						holes=holes+"val<i+1>";	
+						assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(keyvar)>);\n\r")));
+						//appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/hello.php|, "<pp(assignment)>\n");
+						i+=1;
+						println(i);
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, 
+						"{foreach from=$<moles[pp(arrayExpr)]> key=<moles[pp(keyvar)]> item=<moles[pp(asVar)]>}"); 
+						formOfStmt(body1,mole,moles,holes,i,dynamicMole);
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/foreach}");
+					}
 				}
 			}
+					
+			case exprstmt(call(funName, parameters)) :{
+				for (aPart<-body){
+					println(aPart);
+					switch (aPart){
+						case function(name, byRef, params, body1) : {
+							println("yessss");
+							if( name == pp(funName)){
+								for (part1<-body1){								
+									printOrEcho=isPrintOrEcho(part1);		
+								}
+								if(printOrEcho==true){
+									formOfStmt(body1,mole,moles,holes,i,dynamicMole);
+								}
+							}
+						}
+					}
+				}
+			}
+									
+			case \if(cond, body1, elseIfs, elseClause) :{
+				for (part1<-body1){
+					printOrEcho=isPrintOrEcho(part1);
+				}
+				if(printOrEcho){
+					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{if ");
+					evaluateExpression(cond,moles);
+					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
+					formOfStmt(body1,mole,moles,holes,i,dynamicMole);
+					for(elseif <- elseIfs){
+						if (elseIf(cond2,body2):= elseif){
+							appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{elseif ");
+								evaluateExpression(cond2,moles);
+								appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " }");
+								formOfStmt(body2,mole,moles,holes,i,dynamicMole);
+						}
+					}
+					if ( someElse(\else(body3)) := elseClause){
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{else} ");
+						formOfStmt(body3,mole,moles,holes,i,dynamicMole);
+					}			
+					appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, "{/if}");
+				}
+			}
+				
+			case echo(X) :{	
+				for (echoExpression <- X){
+					printedText=evaluateExpression(echoExpression,moles);
+				}
+			}
+		
+			case exprstmt(Expr::print(printExpression)) : {
+				printedText=evaluateExpression(printExpression,moles);						
+			}			
+		}
+	}
 }
 
 private bool isPrintOrEcho(Stmt body){
@@ -276,9 +338,14 @@ private bool isPrintOrEcho(Stmt body){
 						continue;
 				}
 				else
+					println("there is");
 					return printOrEcho;
 			}
 			return printOrEcho=false;
+		}
+		
+		case exprstmt(call(funName,parameters)) :{
+			return printOrEcho;
 		}
 		
 		case echo(X) : return printOrEcho;
@@ -288,3 +355,5 @@ private bool isPrintOrEcho(Stmt body){
 		default : break;
 	}	
 }					
+
+//todo casts, functioncall
