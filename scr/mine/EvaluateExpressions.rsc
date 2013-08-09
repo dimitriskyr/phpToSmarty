@@ -9,20 +9,26 @@ import lang::php::pp::PrettyPrinter;
 
 
 public void evaluateExpression(Expr combinedExpr,map[str,str] moles){
+	println(combinedExpr);
 	if (scalar(string(literal)) := combinedExpr){
-		appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " <literal> " );
-		println("it is print or echo literal");
+		appendToFile(|file://C:/xampp/htdocs/smarty/templates/showTemplate.tpl|, " <literal> " );
 	}
 	else if (var(name(name(X))) := combinedExpr) {
 					if (pp(var(name(name(X)))) in moles)
-						appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var(name(name(X))))]>} ");
+						appendToFile(|file://C:/xampp/htdocs/smarty/templates/showTemplate.tpl|, " {$<moles[pp(var(name(name(X))))]>} ");
 	}
 	else if (fetchArrayDim(var,dim)  := combinedExpr){
 		if (pp(var) in moles && someExpr(scalar(string(dimension))) := dim)
-			appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var)]>.<dimension>} ");			
+			appendToFile(|file://C:/xampp/htdocs/smarty/templates/showTemplate.tpl|, " {$<moles[pp(var)]>.<dimension>} ");			
 		elseif (pp(var) in moles && someExpr(scalar(integer(dimension))) := dim)
-			appendToFile(|file://C:/xampp/htdocs/smarty/templates/hello.tpl|, " {$<moles[pp(var)]>.<dimension>} ");
+			appendToFile(|file://C:/xampp/htdocs/smarty/templates/showTemplate.tpl|, " {$<moles[pp(var)]>.<dimension>} ");
 		}
+	
+	/*else if (call(expr(var(name(name(X))))(_)) := combinedExpr) {
+		println(combinedExpr);
+		println(pp(combinedExpr));
+		println("provlima");
+	}*/
 		
 	else {
 		evaluateNonLiteral(combinedExpr,moles);
