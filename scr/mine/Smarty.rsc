@@ -19,7 +19,7 @@ import List;
 public void showTemplate(){
 	int i=0;
 	str printedText="";
-	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/castsAndReferences.php|;  
+	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/getVar.php|;  
 	Script scr=loadPHPFile(l); 
 	Expr display = propertyFetch(var(name(name("smarty"))),name(name("display(\'showTemplate.tpl\');\n\r")));
 	Expr assignment;
@@ -63,7 +63,7 @@ private void formOfStmt(list[Stmt] body, map[int,str] mole, map[str,str] moles, 
 			
 			case exprstmt(assign(X,Y)) : {
 				println(moles);
-				if (fetchArrayDim(var(name(name("_GET"))),_) := Y){
+				if (fetchArrayDim(var(name(name("_GET"))),_) := Y || fetchArrayDim(var(name(name("_POST"))),_) := Y){
 					appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/showTemplate.php|, pp(assign(X,Y)) + ";");
 					dynamicMole[i+1]= "val<i+1>|escape:\'htmlall\'";
 					moles[pp(X)]=dynamicMole[i+1];
@@ -84,10 +84,10 @@ private void formOfStmt(list[Stmt] body, map[int,str] mole, map[str,str] moles, 
 			}
 			
 			case exprstmt(assignWOp(X,Y,op)) : {
-				if (fetchArrayDim(var(name(name("_GET"))),_) := Y){
+				if (fetchArrayDim(var(name(name("_GET"))),_) := Y || fetchArrayDim(var(name(name("_POST"))),_) := Y){
 					appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/showTemplate.php|, pp(assignWOp(X,Y,op)) + ";");
 					dynamicMole[i+1]= "val<i+1>|escape:\'htmlall\'";
-					moles[pp(X)]=dynamicMole[i];
+					moles[pp(X)]=dynamicMole[i+1];
 					holes=holes+"val<i+1>";
 					assignment = propertyFetch(var(name(name("smarty"))),name(name("assign(\'<holes[i]>\',<pp(X)>);\n\r")));
 					appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/showTemplate.php|, "<pp(assignment)>\n");
@@ -105,10 +105,10 @@ private void formOfStmt(list[Stmt] body, map[int,str] mole, map[str,str] moles, 
 			}
 			
 			case exprstmt(refAssign(X,Y)) : {
-				if (fetchArrayDim(var(name(name("_GET"))),_) := Y){
+				if (fetchArrayDim(var(name(name("_GET"))),_) := Y || fetchArrayDim(var(name(name("_POST"))),_) := Y){
 					appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/showTemplate.php|, pp(assign(X,Y)) + ";");
 					dynamicMole[i+1]= "val<i+1>|escape:\'htmlall\'";
-					moles[pp(X)]=dynamicMole[i];
+					moles[pp(X)]=dynamicMole[i+1];
 					holes=holes+"val<i+1>";
 					assignment = propertyFetch(var(name(name("smarty"))),name(name("assignByRef(\'<holes[i]>\',<pp(X)>);\n\r")));
 					appendToFile(|file://C:/xampp/htdocs/PHPRefactoring/src/showTemplate.php|, "<pp(assignment)>\n");
@@ -332,4 +332,4 @@ private bool isPrintOrEcho(Stmt body){
 	}	
 }					
 
-//todo casts, functioncall
+//todo functioncall
