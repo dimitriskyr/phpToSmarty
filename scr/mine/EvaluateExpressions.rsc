@@ -23,7 +23,9 @@ public void evaluateExpression(Expr combinedExpr,map[str,str] moles){
 		elseif (pp(var) in moles && someExpr(scalar(integer(dimension))) := dim)
 			appendToFile(|file://C:/xampp/htdocs/smarty/templates/showTemplate.tpl|, " {$<moles[pp(var)]>.<dimension>} ");
 		}
-	
+	else if (fetchConst(X) := combinedExpr) {
+		appendToFile(|file://C:/xampp/htdocs/smarty/templates/showTemplate.tpl|,  pp(X) );
+	}
 	/*else if (call(expr(var(name(name(X))))(_)) := combinedExpr) {
 		println(combinedExpr);
 		println(pp(combinedExpr));

@@ -19,7 +19,7 @@ import List;
 public void showTemplate(){
 	int i=0;
 	str printedText="";
-	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/getVar.php|;  
+	loc l = |file://C:/xampp/htdocs/PHPRefactoring/src/ifStatement.php|;  
 	Script scr=loadPHPFile(l); 
 	Expr display = propertyFetch(var(name(name("smarty"))),name(name("display(\'showTemplate.tpl\');\n\r")));
 	Expr assignment;
